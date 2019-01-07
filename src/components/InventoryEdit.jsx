@@ -1,14 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import DateInput from "./DateInput";
-import NumInput from "./NumInput";
-
-export default class IssueEdit extends Component {
+export default class InventoryEdit extends Component {
   constructor() {
     super();
     this.state = {
-      issue: {
+      item: {
         _id: "",
         title: "",
         status: "",
@@ -16,11 +13,9 @@ export default class IssueEdit extends Component {
         effort: null,
         completionDate: null,
         created: null
-      },
-      invalidFields: {}
+      }
     };
     this.onChange = this.onChange.bind(this);
-    this.onValidityChange = this.onValidityChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
@@ -49,21 +44,19 @@ export default class IssueEdit extends Component {
   onSubmit(e) {
     e.preventDefault();
     if (Object.keys(this.state.invalidFields).length !== 0) return;
-    fetch(`/api/issues/${this.props.match.params.id}`, {
+    fetch(`/api/inventory/${this.props.match.params.id}`, {
       method: "PUT",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(this.state.issue)
+      body: JSON.stringify(this.state.item)
     })
       .then(response => {
         if (response.ok) {
-          response.json().then(updatedIssue => {
-            updatedIssue.created = new Date(updatedIssue.created);
-            if (updatedIssue.completionDate)
-              updatedIssue.completionDate = new Date(
-                updatedIssue.completionDate
-              );
-            this.setState({ issue: updatedIssue });
-            console.log("Updated issue successfully");
+          response.json().then(updatedItem => {
+            updatedItem.created = new Date(updatedItem.created);
+            if (updatedItem.completionDate)
+              updatedItem.completionDate = new Date(updatedItem.completionDate);
+            this.setState({ item: updatedItem });
+            console.log("Updated item successfully");
           });
         } else {
           response.json().then(err => {
@@ -82,15 +75,13 @@ export default class IssueEdit extends Component {
       });
   }
   loadData() {
-    fetch(`/api/issues/${this.props.match.params.id}`).then(response => {
+    fetch(`/api/inventory/${this.props.match.params.id}`).then(response => {
       if (response.ok) {
-        response.json().then(issue => {
-          issue.created = new Date(issue.created);
-          issue.completionDate =
-            issue.completionDate != null
-              ? new Date(issue.completionDate)
-              : null;
-          this.setState({ issue });
+        response.json().then(item => {
+          item.created = new Date(item.created);
+          item.completionDate =
+            item.completionDate != null ? new Date(item.completionDate) : null;
+          this.setState({ item });
         });
       } else {
         response.json().then(err => {
@@ -104,7 +95,7 @@ export default class IssueEdit extends Component {
     });
   }
   render() {
-    const issue = this.state.issue;
+    const item = this.state.item;
     const validationMessage =
       Object.keys(this.state.invalidFields).length === 0 ? null : (
         <div className="error">
@@ -114,12 +105,12 @@ export default class IssueEdit extends Component {
     return (
       <div>
         <form onSubmit={this.onSubmit}>
-          ID: {issue._id}
+          ID: {item._id}
           <br />
-          Created: {issue.created ? issue.created.toDateString() : ""}
+          Created: {item.created ? item.created.toDateString() : ""}
           <br />
           Status:{" "}
-          <select name="status" value={issue.status} onChange={this.onChange}>
+          <select name="status" value={item.status} onChange={this.onChange}>
             <option value="New">New</option>
             <option value="Open">Open</option>
             <option value="Assigned">Assigned</option>
@@ -132,7 +123,7 @@ export default class IssueEdit extends Component {
           <input
             type="text"
             name="owner"
-            value={issue.owner}
+            value={item.owner}
             onChange={this.onChange}
           />
           <br />
@@ -140,14 +131,14 @@ export default class IssueEdit extends Component {
           <NumInput
             size={5}
             name="effort"
-            value={issue.effort}
+            value={item.effort}
             onChange={this.onChange}
           />
           <br />
           Completion Date:{" "}
           <DateInput
             name="completionDate"
-            value={issue.completionDate}
+            value={item.completionDate}
             onChange={this.onChange}
             onValidityChange={this.onValidityChange}
           />
@@ -157,14 +148,14 @@ export default class IssueEdit extends Component {
             type="text"
             size={50}
             name="title"
-            value={issue.title}
+            value={item.title}
             onChange={this.onChange}
           />
           <br />
           {validationMessage}
           <button type="submit">Submit</button>
           <br />
-          <Link to="/issues">Back to issue list</Link>
+          <Link to="/inventory">Back to inventory list</Link>
         </form>
       </div>
     );

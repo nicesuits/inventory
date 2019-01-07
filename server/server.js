@@ -10,7 +10,7 @@ let db;
 app.use(express.static("static"));
 app.use(bodyParser.json());
 
-app.get("/api/issues", (req, res) => {
+app.get("/api/inventory", (req, res) => {
   const filter = {};
   if (req.query.status) filter.status = req.query.status;
   if (req.query.effort_lte || req.query.effort_gte) filter.effort = {};
@@ -18,7 +18,7 @@ app.get("/api/issues", (req, res) => {
     filter.effort.$lte = parseInt(req.query.effort_lte, 10);
   if (req.query.effort_gte)
     filter.effort.$gte = parseInt(req.query.effort_gte, 10);
-  db.collection("issues")
+  db.collection("inventory")
     .find(filter)
     .toArray()
     .then(issues => {
@@ -31,7 +31,7 @@ app.get("/api/issues", (req, res) => {
     });
 });
 
-app.get("/api/issues/:id", (req, res) => {
+app.get("/api/inventory/:id", (req, res) => {
   let issueID;
   try {
     issueID = new mongodb.ObjectID(req.params.id);
@@ -41,7 +41,7 @@ app.get("/api/issues/:id", (req, res) => {
     });
     return;
   }
-  db.collection("issues")
+  db.collection("inventory")
     .find({ _id: issueID })
     .limit(1)
     .next()
@@ -58,16 +58,16 @@ app.get("/api/issues/:id", (req, res) => {
     });
 });
 
-app.post("/api/issues", (req, res) => {
+app.post("/api/inventory", (req, res) => {
   const newIssue = req.body;
   newIssue.created = new Date();
   if (!newIssue.status) newIssue.status = "New";
 
-  db.collection("issues")
+  db.collection("inventory")
     .insertOne(newIssue)
     .then(result =>
       db
-        .collection("issues")
+        .collection("inventory")
         .find({ _id: result.insertedId })
         .limit(1)
         .next()
@@ -79,7 +79,7 @@ app.post("/api/issues", (req, res) => {
     });
 });
 
-app.put("/api/issues/:id", (req, res) => {
+app.put("/api/inventory/:id", (req, res) => {
   let issueID;
   try {
     issueID = new mongodb.ObjectID(req.params.id);
@@ -92,10 +92,10 @@ app.put("/api/issues/:id", (req, res) => {
   const issue = req.body;
   delete issue._id;
 
-  db.collection("issues")
+  db.collection("inventory")
     .update({ _id: issueID }, issue)
     .then(() => {
-      db.collection("issues")
+      db.collection("inventory")
         .find({ _id: issueID })
         .limit(1)
         .next();
@@ -109,7 +109,7 @@ app.put("/api/issues/:id", (req, res) => {
     });
 });
 
-app.delete("/api/issues/:id", (req, res) => {
+app.delete("/api/inventory/:id", (req, res) => {
   let issueID;
   try {
     issueID = new mongodb.ObjectID(req.params.id);
@@ -119,7 +119,7 @@ app.delete("/api/issues/:id", (req, res) => {
     });
     return;
   }
-  db.collection("issues")
+  db.collection("inventory")
     .deleteOne({ _id: issueID })
     .then(deleteResult => {
       if (deleteResult.result.n === 1) res.json({ status: "OK" });

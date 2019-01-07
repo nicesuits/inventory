@@ -1,14 +1,14 @@
 import React from "react";
 
-export default class IssueAdd extends React.Component {
+export default class InventoryAdd extends React.Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(e) {
     e.preventDefault();
-    let form = document.forms.issueAdd;
-    this.props.createIssue({
+    let form = document.forms.itemAdd;
+    this.props.createItem({
       owner: form.owner.value,
       title: form.title.value,
       status: "New",
@@ -20,7 +20,7 @@ export default class IssueAdd extends React.Component {
   render() {
     return (
       <div>
-        <form name="issueAdd" onSubmit={this.handleSubmit}>
+        <form name="itemAdd" onSubmit={this.handleSubmit}>
           <input type="text" name="owner" placeholder="Owner" />
           <input type="text" name="title" placeholder="Title" />
           <button>Add</button>

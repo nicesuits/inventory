@@ -8,28 +8,32 @@ import {
   withRouter
 } from "react-router-dom";
 
-import IssueList from "./components/IssueList";
-import IssueEdit from "./components/IssueEdit";
+import InventoryList from "./components/InventoryList";
+import InventoryEdit from "./components/InventoryEdit";
 
 const contentNode = document.getElementById("contents");
 const NoMatch = () => <p>Page Not Found</p>;
 const App = () => (
   <div>
     <header className="header">
-      <h1>Issue Tracker</h1>
+      <h1>Inventory</h1>
     </header>
     <main className="contents">
       <HashRouter>
         <Switch>
-          <Route exact path="/issues" component={withRouter(IssueList)} />
-          <Route exact path="/issues/:id" component={IssueEdit} />
+          <Route
+            exact
+            path="/inventory"
+            component={withRouter(InventoryList)}
+          />
+          <Route exact path="/inventory/:id" component={InventoryEdit} />
           <Route path="*" component={NoMatch} />
         </Switch>
       </HashRouter>
     </main>
     <footer className="footer">
       Full source code available at GitHub.com{" "}
-      <a href="https://github.com/raion314/mern" target="_blank">
+      <a href="https://github.com/raion314/inventory" target="_blank">
         Repo
       </a>
     </footer>
@@ -39,7 +43,7 @@ const App = () => (
 const RoutedApp = () => (
   <HashRouter>
     <Switch>
-      <Redirect exact from="/" to="/issues" />
+      <Redirect exact from="/" to="/inventory" />
       <Route path="/" component={App} />
     </Switch>
   </HashRouter>

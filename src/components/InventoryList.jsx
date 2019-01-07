@@ -2,15 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import qs from "query-string";
 
-import IssueAdd from "./IssueAdd";
-import IssueFilter from "./IssueFilter";
+import InventoryAdd from "./InventoryAdd";
+import InventoryFilter from "./InventoryFilter";
 
-function IssueTable(props) {
-  const issueRows = props.issues.map(issue => (
-    <IssueRow key={issue._id} issue={issue} deleteIssue={props.deleteIssue} />
+function InventoryTable(props) {
+  const inventoryRows = props.inventory.map(item => (
+    <InventoryRow key={item._id} item={item} deleteItem={props.deleteItem} />
   ));
   return (
-    <table className="bordered-table">
+    <table>
       <thead>
         <tr>
           <th>ID</th>
@@ -23,32 +23,32 @@ function IssueTable(props) {
           <th />
         </tr>
       </thead>
-      <tbody>{issueRows}</tbody>
+      <tbody>{inventoryRows}</tbody>
     </table>
   );
 }
 
-const IssueRow = props => {
+const InventoryRow = props => {
   function onDeleteClick() {
-    props.deleteIssue(props.issue._id);
+    props.deleteItem(props.item._id);
   }
   return (
     <tr>
       <td>
-        <Link to={`/issues/${props.issue._id}`}>
-          {props.issue._id.substr(-4)}
+        <Link to={`/inventory/${props.item._id}`}>
+          {props.item._id.substr(-4)}
         </Link>
       </td>
-      <td>{props.issue.status}</td>
-      <td>{props.issue.owner}</td>
-      <td>{props.issue.created.toDateString()}</td>
-      <td>{props.issue.effort}</td>
+      <td>{props.item.status}</td>
+      <td>{props.item.owner}</td>
+      <td>{props.item.created.toDateString()}</td>
+      <td>{props.item.effort}</td>
       <td>
-        {props.issue.completionDate
-          ? props.issue.completionDate.toDateString()
+        {props.item.completionDate
+          ? props.item.completionDate.toDateString()
           : ""}
       </td>
-      <td>{props.issue.title}</td>
+      <td>{props.item.title}</td>
       <td>
         <button onClick={onDeleteClick}>Delete</button>
       </td>
@@ -56,13 +56,13 @@ const IssueRow = props => {
   );
 };
 
-export default class IssueList extends React.Component {
+export default class InventoryList extends React.Component {
   constructor() {
     super();
-    this.state = { issues: [] };
-    this.createIssue = this.createIssue.bind(this);
+    this.state = { inventory: [] };
+    this.createItem = this.createItem.bind(this);
     this.setFilter = this.setFilter.bind(this);
-    this.deleteIssue = this.deleteIssue.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -86,66 +86,71 @@ export default class IssueList extends React.Component {
     });
   }
   loadData() {
-    fetch(`/api/issues${this.props.location.search}`)
+    fetch(`/api/inventory${this.props.location.search}`)
       .then(response => {
         if (response.ok) {
           response.json().then(data => {
             console.log(
               `Total count of records: ${data._metadata.total_count}`
             );
-            data.records.forEach(issue => {
-              issue.created = new Date(issue.created);
-              if (issue.completionDate)
-                issue.completionDate = new Date(issue.completionDate);
+            data.records.forEach(item => {
+              item.created = new Date(item.created);
+              if (item.completionDate)
+                item.completionDate = new Date(item.completionDate);
             });
-            this.setState({ issues: data.records });
+            this.setState({ inventory: data.records });
           });
         } else {
           response.json().then(err => {
-            console.error(`[API GET - Failed to fetch issues]: ${err.message}`);
+            console.error(
+              `[API GET - Failed to fetch inventory]: ${err.message}`
+            );
           });
         }
       })
       .catch(err => {
-        console.error(`[API GET - ERROR to fetch issues]: ${err}`);
+        console.error(`[API GET - ERROR to fetch inventory]: ${err}`);
       });
   }
   createIssue(newIssue) {
-    fetch("/api/issues", {
+    fetch("/api/inventory", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(newIssue)
     })
       .then(response => response.json())
-      .then(updatedIssue => {
-        updatedIssue.created = new Date(updatedIssue.created);
-        if (updatedIssue.completionDate)
-          updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-        const newIssues = this.state.issues.concat(updatedIssue);
-        this.setState({ issues: newIssues });
+      .then(updatedItem => {
+        updatedItem.created = new Date(updatedItem.created);
+        if (updatedItem.completionDate)
+          updatedItem.completionDate = new Date(updatedItem.completionDate);
+        const newIssues = this.state.inventory.concat(updatedItem);
+        this.setState({ inventory: newIssues });
       })
       .catch(err =>
         console.error(`Error in sending data to server: ${err.message}`)
       );
   }
   deleteIssue(id) {
-    fetch(`/api/issues/${id}`, { method: "DELETE" }).then(response => {
+    fetch(`/api/inventory/${id}`, { method: "DELETE" }).then(response => {
       if (!response.ok)
-        console.error("[MongoDB - DELETE ERROR]: Failed to delete issue");
+        console.error("[MongoDB - DELETE ERROR]: Failed to delete item");
       else this.loadData();
     });
   }
   render() {
     return (
       <div>
-        <IssueFilter
+        <InventoryFilter
           setFilter={this.setFilter}
           initFilter={this.props.location.search}
         />
         <hr />
-        <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
+        <InventoryTable
+          inventory={this.state.inventory}
+          deleteItem={this.deleteItem}
+        />
         <hr />
-        <IssueAdd createIssue={this.createIssue} />
+        <InventoryAdd createItem={this.createItem} />
       </div>
     );
   }

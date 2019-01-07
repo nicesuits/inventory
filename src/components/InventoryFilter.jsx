@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class IssueFilter extends React.Component {
+export default class InventoryFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
