@@ -10,9 +10,9 @@ export default class InventoryEdit extends Component {
         title: "",
         status: "",
         owner: "",
-        effort: null,
-        completionDate: null,
-        created: null
+        effort: "",
+        completionDate: "",
+        created: ""
       }
     };
     this.onChange = this.onChange.bind(this);
@@ -25,19 +25,10 @@ export default class InventoryEdit extends Component {
     if (prevProps.match.params.id !== this.props.match.params.id) this.loadData();
   }
   onChange(e, convertedValue) {
-    const issue = Object.assign({}, this.state.issue);
+    const item = Object.assign({}, this.state.item);
     const value = convertedValue !== undefined ? convertedValue : e.target.value;
-    issue[e.target.name] = value;
-    this.setState({ issue });
-  }
-  onValidityChange(e, valid) {
-    const invalidFields = Object.assign({}, this.state.invalidFields);
-    if (!valid) {
-      invalidFields[e.target.name] = true;
-    } else {
-      delete invalidFields[e.target.name];
-    }
-    this.setState({ invalidFields });
+    item[e.target.name] = value;
+    this.setState({ item });
   }
   onSubmit(e) {
     e.preventDefault();
@@ -56,11 +47,11 @@ export default class InventoryEdit extends Component {
         });
       } else {
         response.json().then(err => {
-          console.error(`[MongoDB - UPDATE ERROR] Failed to update issue: ${err.message}`);
+          console.error(`[MongoDB - UPDATE ERROR] Failed to update item: ${err.message}`);
         });
       }
     }).catch(err => {
-      console.error(`[MongoDB - UPDATE ERROR] Error in sending data to server while update issue: ${err.message}`);
+      console.error(`[MongoDB - UPDATE ERROR] Error in sending data to server while update item: ${err.message}`);
     });
   }
   loadData() {
@@ -80,11 +71,6 @@ export default class InventoryEdit extends Component {
   }
   render() {
     const item = this.state.item;
-    const validationMessage = Object.keys(this.state.invalidFields).length === 0 ? null : React.createElement(
-      "div",
-      { className: "error" },
-      "Please correct invalid fields before submitting"
-    );
     return React.createElement(
       "div",
       null,
@@ -145,7 +131,7 @@ export default class InventoryEdit extends Component {
         React.createElement("br", null),
         "Effort:",
         " ",
-        React.createElement(NumInput, {
+        React.createElement("input", {
           size: 5,
           name: "effort",
           value: item.effort,
@@ -154,11 +140,10 @@ export default class InventoryEdit extends Component {
         React.createElement("br", null),
         "Completion Date:",
         " ",
-        React.createElement(DateInput, {
+        React.createElement("input", {
           name: "completionDate",
           value: item.completionDate,
-          onChange: this.onChange,
-          onValidityChange: this.onValidityChange
+          onChange: this.onChange
         }),
         React.createElement("br", null),
         "Title:",
@@ -171,7 +156,6 @@ export default class InventoryEdit extends Component {
           onChange: this.onChange
         }),
         React.createElement("br", null),
-        validationMessage,
         React.createElement(
           "button",
           { type: "submit" },

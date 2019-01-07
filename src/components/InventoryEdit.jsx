@@ -10,9 +10,9 @@ export default class InventoryEdit extends Component {
         title: "",
         status: "",
         owner: "",
-        effort: null,
-        completionDate: null,
-        created: null
+        effort: "",
+        completionDate: "",
+        created: ""
       }
     };
     this.onChange = this.onChange.bind(this);
@@ -26,20 +26,11 @@ export default class InventoryEdit extends Component {
       this.loadData();
   }
   onChange(e, convertedValue) {
-    const issue = Object.assign({}, this.state.issue);
+    const item = Object.assign({}, this.state.item);
     const value =
       convertedValue !== undefined ? convertedValue : e.target.value;
-    issue[e.target.name] = value;
-    this.setState({ issue });
-  }
-  onValidityChange(e, valid) {
-    const invalidFields = Object.assign({}, this.state.invalidFields);
-    if (!valid) {
-      invalidFields[e.target.name] = true;
-    } else {
-      delete invalidFields[e.target.name];
-    }
-    this.setState({ invalidFields });
+    item[e.target.name] = value;
+    this.setState({ item });
   }
   onSubmit(e) {
     e.preventDefault();
@@ -61,14 +52,14 @@ export default class InventoryEdit extends Component {
         } else {
           response.json().then(err => {
             console.error(
-              `[MongoDB - UPDATE ERROR] Failed to update issue: ${err.message}`
+              `[MongoDB - UPDATE ERROR] Failed to update item: ${err.message}`
             );
           });
         }
       })
       .catch(err => {
         console.error(
-          `[MongoDB - UPDATE ERROR] Error in sending data to server while update issue: ${
+          `[MongoDB - UPDATE ERROR] Error in sending data to server while update item: ${
             err.message
           }`
         );
@@ -96,12 +87,6 @@ export default class InventoryEdit extends Component {
   }
   render() {
     const item = this.state.item;
-    const validationMessage =
-      Object.keys(this.state.invalidFields).length === 0 ? null : (
-        <div className="error">
-          Please correct invalid fields before submitting
-        </div>
-      );
     return (
       <div>
         <form onSubmit={this.onSubmit}>
@@ -128,7 +113,7 @@ export default class InventoryEdit extends Component {
           />
           <br />
           Effort:{" "}
-          <NumInput
+          <input
             size={5}
             name="effort"
             value={item.effort}
@@ -136,11 +121,10 @@ export default class InventoryEdit extends Component {
           />
           <br />
           Completion Date:{" "}
-          <DateInput
+          <input
             name="completionDate"
             value={item.completionDate}
             onChange={this.onChange}
-            onValidityChange={this.onValidityChange}
           />
           <br />
           Title:{" "}
@@ -152,7 +136,6 @@ export default class InventoryEdit extends Component {
             onChange={this.onChange}
           />
           <br />
-          {validationMessage}
           <button type="submit">Submit</button>
           <br />
           <Link to="/inventory">Back to inventory list</Link>
