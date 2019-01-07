@@ -29,27 +29,27 @@ function InventoryTable(props) {
         React.createElement(
           "th",
           null,
-          "Owner"
+          "Manufactured"
         ),
         React.createElement(
           "th",
           null,
-          "Created"
+          "Expires"
         ),
         React.createElement(
           "th",
           null,
-          "Effort"
+          "Lot Number"
         ),
         React.createElement(
           "th",
           null,
-          "Completion Date"
+          "Part Number"
         ),
         React.createElement(
           "th",
           null,
-          "Title"
+          "Expires Lot Number"
         ),
         React.createElement("th", null)
       )
@@ -75,7 +75,7 @@ const InventoryRow = props => {
       React.createElement(
         Link,
         { to: `/inventory/${props.item._id}` },
-        props.item._id.substr(-4)
+        props.item._id.substr(-6)
       )
     ),
     React.createElement(
@@ -86,27 +86,27 @@ const InventoryRow = props => {
     React.createElement(
       "td",
       null,
-      props.item.owner
+      props.item.manufactured.substr(-7)
     ),
     React.createElement(
       "td",
       null,
-      props.item.created.toDateString()
+      props.item.expires.substr(-6)
     ),
     React.createElement(
       "td",
       null,
-      props.item.effort
+      props.item.lotnumber.substr(-7)
     ),
     React.createElement(
       "td",
       null,
-      props.item.completionDate ? props.item.completionDate.toDateString() : ""
+      props.item.partnumber.substr(6, 6)
     ),
     React.createElement(
       "td",
       null,
-      props.item.title
+      props.item.expireslotnumber.substr(-7)
     ),
     React.createElement(
       "td",

@@ -7,51 +7,22 @@ export default class InventoryEdit extends Component {
     this.state = {
       item: {
         _id: "",
-        title: "",
         status: "",
-        owner: "",
-        effort: "",
-        completionDate: "",
-        created: ""
+        manufactured: "",
+        expires: "",
+        lotnumber: "",
+        partnumber: "",
+        expireslotnumber: ""
       }
     };
-    this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     this.loadData();
   }
-  onSubmit(e) {
-    e.preventDefault();
-    if (Object.keys(this.state.invalidFields).length !== 0) return;
-    fetch(`/api/inventory/${this.props.match.params.id}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(this.state.item)
-    }).then(response => {
-      if (response.ok) {
-        response.json().then(updatedItem => {
-          updatedItem.created = new Date(updatedItem.created);
-          if (updatedItem.completionDate) updatedItem.completionDate = new Date(updatedItem.completionDate);
-          this.setState({ item: updatedItem });
-          console.log("Updated item successfully");
-        });
-      } else {
-        response.json().then(err => {
-          console.error(`[MongoDB - UPDATE ERROR] Failed to update item: ${err.message}`);
-        });
-      }
-    }).catch(err => {
-      console.error(`[MongoDB - UPDATE ERROR] Error in sending data to server while update item: ${err.message}`);
-    });
-  }
   loadData() {
     fetch(`/api/inventory/${this.props.match.params.id}`).then(response => {
       if (response.ok) {
-        response.json().then(item => {
-          item.created = new Date(item.created);
-          item.completionDate = item.completionDate != null ? new Date(item.completionDate) : null;
-          this.setState({ item });
-        });
+        response.json().then(item => this.setState({ item }));
       } else {
         response.json().then(err => {
           console.error(`[MongoDB - Update ERROR]: Error in fetching data from server: ${err.message}`);
@@ -70,64 +41,23 @@ export default class InventoryEdit extends Component {
         "ID: ",
         item._id,
         React.createElement("br", null),
-        "Created: ",
-        item.created ? item.created.toDateString() : "",
-        React.createElement("br", null),
         "Status:",
-        " ",
-        React.createElement(
-          "select",
-          { name: "status", value: item.status },
-          React.createElement(
-            "option",
-            { value: "New" },
-            "New"
-          ),
-          React.createElement(
-            "option",
-            { value: "Open" },
-            "Open"
-          ),
-          React.createElement(
-            "option",
-            { value: "Assigned" },
-            "Assigned"
-          ),
-          React.createElement(
-            "option",
-            { value: "Fixed" },
-            "Fixed"
-          ),
-          React.createElement(
-            "option",
-            { value: "Verified" },
-            "Verified"
-          ),
-          React.createElement(
-            "option",
-            { value: "Closed" },
-            "Closed"
-          )
-        ),
+        item.status,
         React.createElement("br", null),
-        "Owner: ",
-        React.createElement("input", { type: "text", name: "owner", value: item.owner }),
+        "Manufactured: ",
+        item.manufactured,
         React.createElement("br", null),
-        "Effort: ",
-        React.createElement("input", { size: 5, name: "effort", value: item.effort }),
+        "Expires: ",
+        item.expires,
         React.createElement("br", null),
-        "Completion Date:",
-        " ",
-        React.createElement("input", { name: "completionDate", value: item.completionDate }),
+        "Lot Number: ",
+        item.lotnumber,
         React.createElement("br", null),
-        "Title: ",
-        React.createElement("input", { type: "text", size: 50, name: "title", value: item.title }),
+        "Part Number: ",
+        item.partnumber,
         React.createElement("br", null),
-        React.createElement(
-          "button",
-          { type: "submit" },
-          "Submit"
-        ),
+        "Expires Part Number: ",
+        item.expireslotnumber,
         React.createElement("br", null),
         React.createElement(
           Link,

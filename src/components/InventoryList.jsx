@@ -15,11 +15,11 @@ function InventoryTable(props) {
         <tr>
           <th>ID</th>
           <th>Status</th>
-          <th>Owner</th>
-          <th>Created</th>
-          <th>Effort</th>
-          <th>Completion Date</th>
-          <th>Title</th>
+          <th>Manufactured</th>
+          <th>Expires</th>
+          <th>Lot Number</th>
+          <th>Part Number</th>
+          <th>Expires Lot Number</th>
           <th />
         </tr>
       </thead>
@@ -36,19 +36,15 @@ const InventoryRow = props => {
     <tr>
       <td>
         <Link to={`/inventory/${props.item._id}`}>
-          {props.item._id.substr(-4)}
+          {props.item._id.substr(-6)}
         </Link>
       </td>
       <td>{props.item.status}</td>
-      <td>{props.item.owner}</td>
-      <td>{props.item.created.toDateString()}</td>
-      <td>{props.item.effort}</td>
-      <td>
-        {props.item.completionDate
-          ? props.item.completionDate.toDateString()
-          : ""}
-      </td>
-      <td>{props.item.title}</td>
+      <td>{props.item.manufactured.substr(-7)}</td>
+      <td>{props.item.expires.substr(-6)}</td>
+      <td>{props.item.lotnumber.substr(-7)}</td>
+      <td>{props.item.partnumber.substr(6, 6)}</td>
+      <td>{props.item.expireslotnumber.substr(-7)}</td>
       <td>
         <button onClick={onDeleteClick}>Delete</button>
       </td>
