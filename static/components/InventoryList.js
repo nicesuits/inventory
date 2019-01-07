@@ -6,7 +6,7 @@ import InventoryAdd from "./InventoryAdd";
 import InventoryFilter from "./InventoryFilter";
 
 function InventoryTable(props) {
-  const itemsRows = props.issues.map(item => React.createElement(InventoryRow, { key: item._id, issue: item, deleteItem: props.deleteItem }));
+  const itemsRows = props.items.map(item => React.createElement(InventoryRow, { key: item._id, item: item, deleteItem: props.deleteItem }));
   return React.createElement(
     "table",
     { className: "bordered-table" },
@@ -64,7 +64,7 @@ function InventoryTable(props) {
 
 const InventoryRow = props => {
   function onDeleteClick() {
-    props.deleteItem(props.issue._id);
+    props.deleteItem(props.item._id);
   }
   return React.createElement(
     "tr",
@@ -74,39 +74,39 @@ const InventoryRow = props => {
       null,
       React.createElement(
         Link,
-        { to: `/inventory/${props.issue._id}` },
-        props.issue._id.substr(-4)
+        { to: `/inventory/${props.item._id}` },
+        props.item._id.substr(-4)
       )
     ),
     React.createElement(
       "td",
       null,
-      props.issue.status
+      props.item.status
     ),
     React.createElement(
       "td",
       null,
-      props.issue.owner
+      props.item.owner
     ),
     React.createElement(
       "td",
       null,
-      props.issue.created.toDateString()
+      props.item.created.toDateString()
     ),
     React.createElement(
       "td",
       null,
-      props.issue.effort
+      props.item.effort
     ),
     React.createElement(
       "td",
       null,
-      props.issue.completionDate ? props.issue.completionDate.toDateString() : ""
+      props.item.completionDate ? props.item.completionDate.toDateString() : ""
     ),
     React.createElement(
       "td",
       null,
-      props.issue.title
+      props.item.title
     ),
     React.createElement(
       "td",
@@ -123,7 +123,7 @@ const InventoryRow = props => {
 export default class InventoryList extends React.Component {
   constructor() {
     super();
-    this.state = { issues: [] };
+    this.state = { items: [] };
     this.createItem = this.createItem.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
@@ -154,32 +154,32 @@ export default class InventoryList extends React.Component {
             item.created = new Date(item.created);
             if (item.completionDate) item.completionDate = new Date(item.completionDate);
           });
-          this.setState({ issues: data.records });
+          this.setState({ items: data.records });
         });
       } else {
         response.json().then(err => {
-          console.error(`[API GET - Failed to fetch issues]: ${err.message}`);
+          console.error(`[API GET - Failed to fetch items]: ${err.message}`);
         });
       }
     }).catch(err => {
-      console.error(`[API GET - ERROR to fetch issues]: ${err}`);
+      console.error(`[API GET - ERROR to fetch items]: ${err}`);
     });
   }
-  createItem(newIssue) {
+  createItem(newItem) {
     fetch("/api/inventory", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(newIssue)
+      body: JSON.stringify(newItem)
     }).then(response => response.json()).then(updatedItem => {
       updatedItem.created = new Date(updatedItem.created);
       if (updatedItem.completionDate) updatedItem.completionDate = new Date(updatedItem.completionDate);
-      const newItems = this.state.issues.concat(updatedItem);
-      this.setState({ issues: newItems });
+      const newItems = this.state.items.concat(updatedItem);
+      this.setState({ items: newItems });
     }).catch(err => console.error(`Error in sending data to server: ${err.message}`));
   }
   deleteItem(id) {
     fetch(`/api/inventory/${id}`, { method: "DELETE" }).then(response => {
-      if (!response.ok) console.error("[MongoDB - DELETE ERROR]: Failed to delete issue");else this.loadData();
+      if (!response.ok) console.error("[MongoDB - DELETE ERROR]: Failed to delete item");else this.loadData();
     });
   }
   render() {
@@ -191,10 +191,7 @@ export default class InventoryList extends React.Component {
         initFilter: this.props.location.search
       }),
       React.createElement("hr", null),
-      React.createElement(InventoryTable, {
-        issues: this.state.issues,
-        deleteItem: this.deleteItem
-      }),
+      React.createElement(InventoryTable, { items: this.state.items, deleteItem: this.deleteItem }),
       React.createElement("hr", null),
       React.createElement(InventoryAdd, { createItem: this.createItem })
     );
