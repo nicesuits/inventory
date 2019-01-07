@@ -15,22 +15,10 @@ export default class InventoryEdit extends Component {
         created: ""
       }
     };
-    this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     this.loadData();
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.id !== this.props.match.params.id)
-      this.loadData();
-  }
-  onChange(e, convertedValue) {
-    const item = Object.assign({}, this.state.item);
-    const value =
-      convertedValue !== undefined ? convertedValue : e.target.value;
-    item[e.target.name] = value;
-    this.setState({ item });
   }
   onSubmit(e) {
     e.preventDefault();
@@ -95,7 +83,7 @@ export default class InventoryEdit extends Component {
           Created: {item.created ? item.created.toDateString() : ""}
           <br />
           Status:{" "}
-          <select name="status" value={item.status} onChange={this.onChange}>
+          <select name="status" value={item.status}>
             <option value="New">New</option>
             <option value="Open">Open</option>
             <option value="Assigned">Assigned</option>
@@ -104,37 +92,14 @@ export default class InventoryEdit extends Component {
             <option value="Closed">Closed</option>
           </select>
           <br />
-          Owner:{" "}
-          <input
-            type="text"
-            name="owner"
-            value={item.owner}
-            onChange={this.onChange}
-          />
+          Owner: <input type="text" name="owner" value={item.owner} />
           <br />
-          Effort:{" "}
-          <input
-            size={5}
-            name="effort"
-            value={item.effort}
-            onChange={this.onChange}
-          />
+          Effort: <input size={5} name="effort" value={item.effort} />
           <br />
           Completion Date:{" "}
-          <input
-            name="completionDate"
-            value={item.completionDate}
-            onChange={this.onChange}
-          />
+          <input name="completionDate" value={item.completionDate} />
           <br />
-          Title:{" "}
-          <input
-            type="text"
-            size={50}
-            name="title"
-            value={item.title}
-            onChange={this.onChange}
-          />
+          Title: <input type="text" size={50} name="title" value={item.title} />
           <br />
           <button type="submit">Submit</button>
           <br />

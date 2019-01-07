@@ -15,20 +15,10 @@ export default class InventoryEdit extends Component {
         created: ""
       }
     };
-    this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentDidMount() {
     this.loadData();
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.match.params.id !== this.props.match.params.id) this.loadData();
-  }
-  onChange(e, convertedValue) {
-    const item = Object.assign({}, this.state.item);
-    const value = convertedValue !== undefined ? convertedValue : e.target.value;
-    item[e.target.name] = value;
-    this.setState({ item });
   }
   onSubmit(e) {
     e.preventDefault();
@@ -87,7 +77,7 @@ export default class InventoryEdit extends Component {
         " ",
         React.createElement(
           "select",
-          { name: "status", value: item.status, onChange: this.onChange },
+          { name: "status", value: item.status },
           React.createElement(
             "option",
             { value: "New" },
@@ -120,41 +110,18 @@ export default class InventoryEdit extends Component {
           )
         ),
         React.createElement("br", null),
-        "Owner:",
-        " ",
-        React.createElement("input", {
-          type: "text",
-          name: "owner",
-          value: item.owner,
-          onChange: this.onChange
-        }),
+        "Owner: ",
+        React.createElement("input", { type: "text", name: "owner", value: item.owner }),
         React.createElement("br", null),
-        "Effort:",
-        " ",
-        React.createElement("input", {
-          size: 5,
-          name: "effort",
-          value: item.effort,
-          onChange: this.onChange
-        }),
+        "Effort: ",
+        React.createElement("input", { size: 5, name: "effort", value: item.effort }),
         React.createElement("br", null),
         "Completion Date:",
         " ",
-        React.createElement("input", {
-          name: "completionDate",
-          value: item.completionDate,
-          onChange: this.onChange
-        }),
+        React.createElement("input", { name: "completionDate", value: item.completionDate }),
         React.createElement("br", null),
-        "Title:",
-        " ",
-        React.createElement("input", {
-          type: "text",
-          size: 50,
-          name: "title",
-          value: item.title,
-          onChange: this.onChange
-        }),
+        "Title: ",
+        React.createElement("input", { type: "text", size: 50, name: "title", value: item.title }),
         React.createElement("br", null),
         React.createElement(
           "button",
