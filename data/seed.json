@@ -1,18 +1,34 @@
 [
   {
-    "status": "Open",
-    "owner": "Raven",
-    "created": "2016-08-15",
-    "effort": 5,
-    "completionDate": "",
-    "title": "Error in console when clicking Add"
+    "status": "(01)15099590203344",
+    "manufactured": "(11)161123",
+    "expires": "(17)181130",
+    "lotnumber": "(10)M611410",
+    "partnumber": "*+H628A409201E*",
+    "expireslotnumber": "*+$$3181130M611410ED*"
   },
   {
-    "status": "Assigned",
-    "owner": "Eddie",
-    "created": "2016-08-16",
-    "effort": 15,
-    "completionDate": "2016-08-30",
-    "title": "Missing bottom border on panel"
+    "status": "(01)15099590203345",
+    "manufactured": "(11)161123",
+    "expires": "(17)181131",
+    "lotnumber": "(10)M611410",
+    "partnumber": "*+H628A409201E*",
+    "expireslotnumber": "*+$$3181130M611410ED*"
+  },
+  {
+    "status": "(01)15099590203344",
+    "manufactured": "(11)161123",
+    "expires": "(17)181132",
+    "lotnumber": "(10)M611410",
+    "partnumber": "*+H628A409201E*",
+    "expireslotnumber": "*+$$3181130M611410ED*"
+  },
+  {
+    "status": "(01)15099590203344",
+    "manufactured": "(11)161123",
+    "expires": "(17)181133",
+    "lotnumber": "(10)M611410",
+    "partnumber": "*+H628A409201E*",
+    "expireslotnumber": "*+$$3181130M611410ED*"
   }
 ]
