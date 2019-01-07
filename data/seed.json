@@ -1,0 +1,18 @@
+[
+  {
+    "status": "Open",
+    "owner": "Raven",
+    "created": "2016-08-15",
+    "effort": 5,
+    "completionDate": "",
+    "title": "Error in console when clicking Add"
+  },
+  {
+    "status": "Assigned",
+    "owner": "Eddie",
+    "created": "2016-08-16",
+    "effort": 15,
+    "completionDate": "2016-08-30",
+    "title": "Missing bottom border on panel"
+  }
+]
