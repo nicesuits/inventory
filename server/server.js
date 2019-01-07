@@ -140,7 +140,7 @@ MongoClient.connect(
   { useNewUrlParser: true }
 )
   .then(client => {
-    db = client.db("issuetracker");
+    db = client.db("inventory");
     app.listen(3000, () => {
       console.log("App started on port 3000");
     });
