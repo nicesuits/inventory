@@ -6,11 +6,15 @@ import InventoryAdd from "./InventoryAdd";
 import InventoryFilter from "./InventoryFilter";
 
 function InventoryTable(props) {
-  const inventoryRows = props.inventory.map(item => (
-    <InventoryRow key={item._id} item={item} deleteItem={props.deleteItem} />
+  const issueRows = props.issues.map(issue => (
+    <InventoryRow
+      key={issue._id}
+      issue={issue}
+      deleteIssue={props.deleteIssue}
+    />
   ));
   return (
-    <table>
+    <table className="bordered-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -23,32 +27,32 @@ function InventoryTable(props) {
           <th />
         </tr>
       </thead>
-      <tbody>{inventoryRows}</tbody>
+      <tbody>{issueRows}</tbody>
     </table>
   );
 }
 
 const InventoryRow = props => {
   function onDeleteClick() {
-    props.deleteItem(props.item._id);
+    props.deleteIssue(props.issue._id);
   }
   return (
     <tr>
       <td>
-        <Link to={`/inventory/${props.item._id}`}>
-          {props.item._id.substr(-4)}
+        <Link to={`/inventory/${props.issue._id}`}>
+          {props.issue._id.substr(-4)}
         </Link>
       </td>
-      <td>{props.item.status}</td>
-      <td>{props.item.owner}</td>
-      <td>{props.item.created.toDateString()}</td>
-      <td>{props.item.effort}</td>
+      <td>{props.issue.status}</td>
+      <td>{props.issue.owner}</td>
+      <td>{props.issue.created.toDateString()}</td>
+      <td>{props.issue.effort}</td>
       <td>
-        {props.item.completionDate
-          ? props.item.completionDate.toDateString()
+        {props.issue.completionDate
+          ? props.issue.completionDate.toDateString()
           : ""}
       </td>
-      <td>{props.item.title}</td>
+      <td>{props.issue.title}</td>
       <td>
         <button onClick={onDeleteClick}>Delete</button>
       </td>
@@ -59,10 +63,10 @@ const InventoryRow = props => {
 export default class InventoryList extends React.Component {
   constructor() {
     super();
-    this.state = { inventory: [] };
-    this.createItem = this.createItem.bind(this);
+    this.state = { issues: [] };
+    this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
+    this.deleteIssue = this.deleteIssue.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -93,23 +97,21 @@ export default class InventoryList extends React.Component {
             console.log(
               `Total count of records: ${data._metadata.total_count}`
             );
-            data.records.forEach(item => {
-              item.created = new Date(item.created);
-              if (item.completionDate)
-                item.completionDate = new Date(item.completionDate);
+            data.records.forEach(issue => {
+              issue.created = new Date(issue.created);
+              if (issue.completionDate)
+                issue.completionDate = new Date(issue.completionDate);
             });
-            this.setState({ inventory: data.records });
+            this.setState({ issues: data.records });
           });
         } else {
           response.json().then(err => {
-            console.error(
-              `[API GET - Failed to fetch inventory]: ${err.message}`
-            );
+            console.error(`[API GET - Failed to fetch issues]: ${err.message}`);
           });
         }
       })
       .catch(err => {
-        console.error(`[API GET - ERROR to fetch inventory]: ${err}`);
+        console.error(`[API GET - ERROR to fetch issues]: ${err}`);
       });
   }
   createIssue(newIssue) {
@@ -119,12 +121,12 @@ export default class InventoryList extends React.Component {
       body: JSON.stringify(newIssue)
     })
       .then(response => response.json())
-      .then(updatedItem => {
-        updatedItem.created = new Date(updatedItem.created);
-        if (updatedItem.completionDate)
-          updatedItem.completionDate = new Date(updatedItem.completionDate);
-        const newIssues = this.state.inventory.concat(updatedItem);
-        this.setState({ inventory: newIssues });
+      .then(updatedIssue => {
+        updatedIssue.created = new Date(updatedIssue.created);
+        if (updatedIssue.completionDate)
+          updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+        const newIssues = this.state.issues.concat(updatedIssue);
+        this.setState({ issues: newIssues });
       })
       .catch(err =>
         console.error(`Error in sending data to server: ${err.message}`)
@@ -133,7 +135,7 @@ export default class InventoryList extends React.Component {
   deleteIssue(id) {
     fetch(`/api/inventory/${id}`, { method: "DELETE" }).then(response => {
       if (!response.ok)
-        console.error("[MongoDB - DELETE ERROR]: Failed to delete item");
+        console.error("[MongoDB - DELETE ERROR]: Failed to delete issue");
       else this.loadData();
     });
   }
@@ -146,11 +148,11 @@ export default class InventoryList extends React.Component {
         />
         <hr />
         <InventoryTable
-          inventory={this.state.inventory}
-          deleteItem={this.deleteItem}
+          issues={this.state.issues}
+          deleteIssue={this.deleteIssue}
         />
         <hr />
-        <InventoryAdd createItem={this.createItem} />
+        <InventoryAdd createIssue={this.createIssue} />
       </div>
     );
   }
