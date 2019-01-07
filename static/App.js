@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Route, Redirect, HashRouter, Switch, withRouter } from "react-router-dom";
 
-import IssueList from "./components/IssueList";
-import IssueEdit from "./components/IssueEdit";
+import InventoryList from "./components/InventoryList";
+import InventoryEdit from "./components/InventoryEdit";
 
 const contentNode = document.getElementById("contents");
 const NoMatch = () => React.createElement(
@@ -20,7 +20,7 @@ const App = () => React.createElement(
     React.createElement(
       "h1",
       null,
-      "Issue Tracker"
+      "Inventory"
     )
   ),
   React.createElement(
@@ -32,8 +32,12 @@ const App = () => React.createElement(
       React.createElement(
         Switch,
         null,
-        React.createElement(Route, { exact: true, path: "/issues", component: withRouter(IssueList) }),
-        React.createElement(Route, { exact: true, path: "/issues/:id", component: IssueEdit }),
+        React.createElement(Route, {
+          exact: true,
+          path: "/inventory",
+          component: withRouter(InventoryList)
+        }),
+        React.createElement(Route, { exact: true, path: "/inventory/:id", component: InventoryEdit }),
         React.createElement(Route, { path: "*", component: NoMatch })
       )
     )
@@ -45,7 +49,7 @@ const App = () => React.createElement(
     " ",
     React.createElement(
       "a",
-      { href: "https://github.com/raion314/mern", target: "_blank" },
+      { href: "https://github.com/raion314/inventory", target: "_blank" },
       "Repo"
     )
   )
@@ -57,7 +61,7 @@ const RoutedApp = () => React.createElement(
   React.createElement(
     Switch,
     null,
-    React.createElement(Redirect, { exact: true, from: "/", to: "/issues" }),
+    React.createElement(Redirect, { exact: true, from: "/", to: "/inventory" }),
     React.createElement(Route, { path: "/", component: App })
   )
 );
